@@ -8,6 +8,7 @@ import java.util.*;
 public class DiaryRepository {
 	static List<MemberDTO> memberList = new ArrayList<>();
 	static List<DiaryDTO> diaryList = new ArrayList<>();
+	
 	static Long diaryId = 0L;
 	static int diaryHits = 0;
 	Scanner scan = new Scanner(System.in);
@@ -49,7 +50,7 @@ public class DiaryRepository {
 			}
 		}
 		return findMember;
-	}
+	}    
 
 	public MemberDTO memberPassUpdate(String memberId, String memberPass) {
 		MemberDTO memberPassUpdate = null;
@@ -99,12 +100,11 @@ public class DiaryRepository {
 		return diaryList.add(newDiary);
 	}
 
-	public boolean diaryWrite(String memberId, String diary) {
+	public boolean diarySave(String memberId,String diaryTitle, String diary) {
 		boolean diaryResult = false;
 		for (int i = 0; i < memberList.size(); i++) {
 			if (memberId.equals(memberList.get(i).getMemberId())) {
-				DiaryDTO newDiary = new DiaryDTO(++diaryId, memberId, diaryDate(), diary, "", diaryCreatedTime(),
-						diaryHits);
+				DiaryDTO newDiary = new DiaryDTO(++diaryId, memberId, diaryDate(),diaryTitle, diary, diaryCreatedTime(), diaryHits);
 				diaryList.add(newDiary);
 				diaryResult = true;
 			}
@@ -151,47 +151,80 @@ public class DiaryRepository {
 		return list;
 	}
 
-	public DiaryDTO diaryFindById(Long id) {
+	public List<DiaryDTO> diaryFindByTitle(String diaryTitle) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryTitle.equals(diaryList.get(i).getDiaryTitle())) {
+				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+	public List<DiaryDTO> diaryFindByDiaryId(Long diaryId2) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryId2.equals(diaryList.get(i).getId())) {
+				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+
+	public DiaryDTO diaryFindById(Long diaryId2) {
 		DiaryDTO diary = null;
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (id.equals(diaryList.get(i).getId())) {
+			if (diaryId2.equals(diaryList.get(i).getId())) {
 				diary = diaryList.get(i);
 			}
 		}
 		return diary;
 	}
-
-	public DiaryDTO diaryComment(Long id, String comment) {
-		DiaryDTO diary = null;
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (id.equals(diaryList.get(i).getId())) {
-				diaryList.get(i).setComment(comment);
-				diary = diaryList.get(i);
+	public DiaryDTO findByDiaryId(Long diaryId2) {
+		DiaryDTO findByDiaryId = null;
+		for(int i=0; i < diaryList.size();i++) {
+			if(diaryId2.equals(diaryList.get(i).getId())){
+				return diaryList.get(i);
 			}
 		}
-		return diary;
+		return findByDiaryId;
 	}
 
-	public DiaryDTO diaryUpdate(Long id, String memberId, String diary) {
+	public DiaryDTO diaryTitleUpdate(Long diaryId2, String diaryTitle) {
 		DiaryDTO diaryUpdate = null;
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (id.equals(diaryList.get(i).getId()) && memberId.equals(diaryList.get(i).getMemberId())) {
-				diaryList.get(i).setDiary(diary);
+			if (diaryId2.equals(diaryList.get(i).getId())) {
+				diaryList.get(i).setDiaryTitle(diaryTitle);
 				diaryUpdate = diaryList.get(i);
 			}
 		}
 		return diaryUpdate;
-
 	}
-
-	public boolean diaryDelete(Long id, String memberId) {
-		boolean diaryDelete = false;
+	
+	public DiaryDTO diaryUpdate(Long diaryId2, String diary) {
+		DiaryDTO diaryUpdate = null;
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (id.equals(diaryList.get(i).getId()) && memberId.equals(diaryList.get(i).getMemberId())) {
-				diaryList.remove(i);
-				diaryDelete = true;
+			if (diaryId2.equals(diaryList.get(i).getId())) {
+				diaryList.get(i).setDiary(diary);
+				diaryUpdate = diaryList.get(i);
+				
 			}
 		}
-		return diaryDelete;
+		return diaryUpdate;
 	}
+
+	public boolean diaryDelete(Long diaryId2) {
+		boolean deleteResult = false;
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryId2.equals(diaryList.get(i).getId())) {
+				diaryList.remove(i);
+				deleteResult = true;
+			}
+		}
+		return deleteResult;
+	}
+
+
+	
 }
