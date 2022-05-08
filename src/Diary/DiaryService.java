@@ -169,7 +169,7 @@ public class DiaryService {
 				} else {
 					System.out.println("다이어리 작성 실패");
 				}
-				System.out.println("회원만 열람할 수 있습니다.");
+				System.out.println("해당 아이디로 로그인한 회원만 열람할 수 있습니다.");
 
 			} else {
 				System.out.println("공개/비공개 여부가 선택 되지 않아 다이어리가 작성되지 않습니다.");
@@ -191,9 +191,9 @@ public class DiaryService {
 		diaryFindByOpen();
 		boolean run = true;
 		while (run) {
-			System.out.println("---------------------------------------------------------------------");
+			System.out.println("----------------------------------------------------------------------");
 			System.out.println("1. 아이디로 조회 | 2. 작성일로 조회 | 3. 제목으로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
-			System.out.println("---------------------------------------------------------------------");
+			System.out.println("----------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
 			if (select == 1) {
@@ -283,22 +283,18 @@ public class DiaryService {
 			}
 			System.out.print("변경할 다이어리 번호: ");
 			Long diaryId = scan.nextLong();
-			boolean checkDiaryId = dr.checkDiaryId(diaryId);
-			if (checkDiaryId) {
-				System.out.print("변경할 다이어리 제목: ");
-				String diaryTitle = scan.next();
-				System.out.print("변경할 다이어리 내용: ");
-				String diary = scan.next();
-				DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, diaryTitle, diary);
-				if (diaryUpdate != null) {
-					System.out.println(diaryUpdate);
-				} else {
-					System.out.println("변경될 내용이 없습니다.");
-				}
+			System.out.print("변경할 다이어리 제목: ");
+			String diaryTitle = scan.next();
+			System.out.print("변경할 다이어리 내용: ");
+			String diary = scan.next();
+			DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, memberId, diaryTitle, diary);
+			if (diaryUpdate != null) {
+				System.out.println(diaryUpdate);
 			} else {
-				System.out.println("해당 다이어리 번호가 없습니다.");
+				System.out.println("회원은 해당 번호의 다이어리가 없습니다.");
 			}
-		} else {
+		} 
+		else {
 			System.out.println("아이디 또는 비밀번호가 틀립니다. 다시 입력하세요!!");
 		}
 	}
@@ -318,7 +314,7 @@ public class DiaryService {
 			}
 			System.out.print("삭제할 다이어리 번호: ");
 			Long diaryId = scan.nextLong();
-			boolean diaryDel = dr.diaryDelete(diaryId);
+			boolean diaryDel = dr.diaryDelete(diaryId, memberId);
 			if (diaryDel) {
 				System.out.println("다이어리를 삭제하였습니다.");
 			} else {
@@ -437,7 +433,7 @@ public class DiaryService {
 		memberFindAll();
 		System.out.print("아이디: ");
 		String memberId = scan.next();
-		System.out.print("비밀번호:");
+		System.out.print("비밀번호: ");
 		String memberPass = scan.next();
 		boolean login = dr.memberLogin(memberId, memberPass);
 		if (login) {
@@ -448,18 +444,18 @@ public class DiaryService {
 			}
 			System.out.print("변경할 글 번호: ");
 			Long postId = scan.nextLong();
-			boolean checkPostId = dr.checkPostId(postId);
-			if (checkPostId) {
-				System.out.print("변경할 글 제목: ");
-				String postTitle = scan.next();
-				scan.nextLine();
-				System.out.print("변경할 글 내용: ");
-				String postContents = scan.nextLine();
-				PostDTO postUpdate = dr.postUpdate(postId, postTitle, postContents);
+			System.out.print("변경할 글 제목: ");
+			String postTitle = scan.next();
+			scan.nextLine();
+			System.out.print("변경할 글 내용: ");
+			String postContents = scan.nextLine();
+			PostDTO postUpdate = dr.postUpdate(postId, memberId, postTitle, postContents);
+			if(postUpdate != null) {
 				System.out.println(postUpdate);
-			} else {
-				System.out.println("해당 글 번호의 게시글이 없습니다.");
 			}
+			else {
+				System.out.println("회원은 해당 글번호의 게시글이 없습니다. ");
+			} 		
 		}
 		else {
 			System.out.println("아이디 또는 비밀번호가 틀립니다!!");
@@ -481,12 +477,12 @@ public class DiaryService {
 			}
 			System.out.print("삭제할 글 번호: ");
 			Long postId = scan.nextLong();
-			boolean postDelete = dr.postDelete(postId);
+			boolean postDelete = dr.postDelete(postId, memberId);
 			if(postDelete) {
 				System.out.println("게시글이 삭제되었습니다.");
 			}
 			else {
-				System.out.println("해당 글 번호의 게시글이 없습니다.");
+				System.out.println("회원은 해당 글 번호의 게시글이 없습니다.");
 			}
 		}
 		else {

@@ -20,7 +20,7 @@ public class DiaryMain {
 				System.out.println("-----------------------------------------------------------------------------------");
 				System.out.println("1. 회원가입 | 2. 로그인 | 3. 회원 목록 | 4. 회원 상세 조회 | 5. 회원 정보 수정 | 6. 회원 탈퇴 ");
 				System.out.println("-----------------------------------------------------------------------------------");
-				System.out.print("선택>");
+				System.out.print("선택> ");
 				selectNumber = scan.nextInt();
 				if (selectNumber == 1) {
 					ds.memberSave();
@@ -55,9 +55,9 @@ public class DiaryMain {
 					ds.diaryDelete();
 				}
 			}else if (select == 3) {
-				System.out.println("--------------------------------------------------------------------------");
-				System.out.println("1. 게시판 작성 | 2. 게시판 전체 목록 | 3. 게시판 조회 | 4. 게시판 수정 | 5. 게시판 삭제");
-				System.out.println("--------------------------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------------------------");
+				System.out.println("1. 게시판 글 작성 | 2. 게시판 전체 목록 | 3. 게시판 조회 | 4. 게시판 글 수정 | 5. 게시판 글 삭제");
+				System.out.println("---------------------------------------------------------------------------------");
 				System.out.print("선택> ");
 				selectNumber = scan.nextInt();
 				if(selectNumber == 1) {

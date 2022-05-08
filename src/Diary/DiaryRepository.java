@@ -174,15 +174,6 @@ public class DiaryRepository {
 		return list;
 	}
 	
-	public boolean checkDiaryId(Long diaryId2) {
-		boolean diary = false;
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryId2.equals(diaryList.get(i).getId())) {
-				diary = true;
-			}
-		}
-		return diary;
-	}
 	
 	// 작성한 다이어리 목록
 	public List<DiaryDTO> diaryFindByMemberId(String memberId) {
@@ -196,10 +187,10 @@ public class DiaryRepository {
 	}
 	
 	
-	public DiaryDTO diaryUpdate(Long diaryId2, String diaryTitle, String diary) {
+	public DiaryDTO diaryUpdate(Long diaryId2, String memberId, String diaryTitle, String diary) {
 		DiaryDTO diaryUpdate = null;
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryId2.equals(diaryList.get(i).getId())) {
+			if (diaryId2.equals(diaryList.get(i).getId()) && memberId.equals(diaryList.get(i).getMemberId())) {
 				diaryList.get(i).setDiaryTitle(diaryTitle);
 				diaryList.get(i).setDiary(diary);
 				diaryUpdate = diaryList.get(i);
@@ -208,10 +199,10 @@ public class DiaryRepository {
 		return diaryUpdate;
 	}
 
-	public boolean diaryDelete(Long diaryId2) {
+	public boolean diaryDelete(Long diaryId2,String memberId) {
 		boolean deleteResult = false;
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryId2.equals(diaryList.get(i).getId())) {
+			if (diaryId2.equals(diaryList.get(i).getId()) && memberId.equals(diaryList.get(i).getMemberId())) {
 				diaryList.remove(i);
 				deleteResult = true;
 			}
@@ -285,10 +276,10 @@ public class DiaryRepository {
 		return checkPostId;
 	}
 
-	public PostDTO postUpdate(Long postId2,String postTitle, String postContents) {
+	public PostDTO postUpdate(Long postId2,String memberId, String postTitle, String postContents) {
 		PostDTO postUpdate = null;
 		for (int i = 0; i < postList.size(); i++) {
-			if (postId2.equals(postList.get(i).getPostId())) {
+			if (postId2.equals(postList.get(i).getPostId()) && memberId.equals(postList.get(i).getMemberId())) {
 				postList.get(i).setPostTitle(postTitle);
 				postList.get(i).setPostContents(postContents);
 				postUpdate = postList.get(i);
@@ -298,10 +289,10 @@ public class DiaryRepository {
 		
 	}
 
-	public boolean postDelete(Long postId2) {
+	public boolean postDelete(Long postId2,String memberId) {
 		boolean postDelete = false;
 		for(int i = 0; i < postList.size(); i++) {
-			if(postId2.equals(postList.get(i).getPostId())) {
+			if(postId2.equals(postList.get(i).getPostId()) && memberId.equals(postList.get(i).getMemberId())) {
 				postList.remove(i);
 				postDelete = true;
 			}
