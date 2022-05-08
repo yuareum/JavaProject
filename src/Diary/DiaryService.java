@@ -172,7 +172,7 @@ public class DiaryService {
 				System.out.println("회원만 열람할 수 있습니다.");
 
 			} else {
-				System.out.println("공개/비공개 여부가 선택 되지 않았습니다. 다이어리가 작성되지 않습니다.");
+				System.out.println("공개/비공개 여부가 선택 되지 않아 다이어리가 작성되지 않습니다.");
 			}
 		} else {
 			System.out.println("아이디 또는 비밀번호가 틀립니다. 다시 입력 하세요!!");
@@ -192,7 +192,7 @@ public class DiaryService {
 		boolean run = true;
 		while (run) {
 			System.out.println("---------------------------------------------------------------------");
-			System.out.println("1. 아이디로 조회 | 2. 작성 일로 조회 | 3.제목으로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("1. 아이디로 조회 | 2. 작성일로 조회 | 3. 제목으로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
 			System.out.println("---------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
@@ -365,7 +365,7 @@ public class DiaryService {
 		boolean run = true;
 		while (run) {
 			System.out.println("-----------------------------------------------------------------------");
-			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 날짜로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 작성일로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
 			System.out.println("-----------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();

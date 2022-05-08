@@ -56,7 +56,7 @@ public class DiaryMain {
 				}
 			}else if (select == 3) {
 				System.out.println("--------------------------------------------------------------------------");
-				System.out.println("1. 게시판 작성 | 2. 게시판 목록 | 3. 게시판 조회 | 4. 게시판 수정 | 5. 게시판 삭제");
+				System.out.println("1. 게시판 작성 | 2. 게시판 전체 목록 | 3. 게시판 조회 | 4. 게시판 수정 | 5. 게시판 삭제");
 				System.out.println("--------------------------------------------------------------------------");
 				System.out.print("선택>");
 				selectNumber = scan.nextInt();
