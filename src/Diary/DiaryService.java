@@ -51,10 +51,10 @@ public class DiaryService {
 			if (login) {
 				System.out.println("로그인 성공");
 			} else {
-				System.out.println("로그인 실패. 다시 입력 하세요!!");
+				System.out.println("로그인 실패. 비밀번호가 틀립니다!!");
 			}
 		} else {
-			System.out.println("로그인 실패. 다시 입력 하세요!!");
+			System.out.println("로그인 실패. 가입하지 않은 아이디 입니다!!");
 		}
 	}
 
@@ -71,7 +71,7 @@ public class DiaryService {
 		String memberId = scan.next();
 		if (checkMemberId(memberId)) {
 			MemberDTO findMember = dr.findByMemberId(memberId);
-			System.out.println("해당 회원 정보: " + findMember);
+			System.out.println(findMember);
 		} else {
 			System.out.println("해당 아이디가 없습니다.");
 		}
@@ -88,9 +88,9 @@ public class DiaryService {
 		System.out.print("비밀번호 : ");
 		String memberPass = scan.next();
 		if (dr.memberLogin(memberId, memberPass)) {
-			System.out.println("-----------------------------------------------------");
+			System.out.println("---------------------------------------------------");
 			System.out.println("1. 비밀번호 변경 | 2. 전화번호 변경 | 3. 이메일 변경");
-			System.out.println("------------------------------------------------------");
+			System.out.println("---------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
 			if (select == 1) {
@@ -137,72 +137,132 @@ public class DiaryService {
 		memberFindAll();
 		System.out.print("아이디: ");
 		String memberId = scan.next();
-		scan.nextLine();
-		System.out.print("비밀번호:");
+		System.out.print("비밀번호: ");
 		String memberPass = scan.next();
 		boolean login = dr.memberLogin(memberId, memberPass);
 		if (login) {
-			scan.nextLine();
 			System.out.print("다이어리 제목: ");
 			String diaryTitle = scan.next();
 			scan.nextLine();
 			System.out.print("다이어리: ");
 			String diary = scan.nextLine();
-			boolean diaryResult = dr.diarySave(memberId, diaryTitle, diary);
-			if (diaryResult) {
-				System.out.println("다이어리 작성 완료");
+			System.out.println("---------------------");
+			System.out.println("1. 공개 | 2. 비공개");
+			System.out.println("---------------------");
+			System.out.print("선택> ");
+			int select = scan.nextInt();
+			boolean run = true;
+			if (select == 1) {
+				int open = 1; // 공개 선택시 open = 1로 저장
+				boolean diaryResult = dr.diarySave(memberId, diaryTitle, open, diary);
+				if (diaryResult) {
+					System.out.println("다이어리 작성 완료");
+				} else {
+					System.out.println("다이어리 작성 실패");
+				}
+				System.out.println("전체 열람 가능 합니다.");
+			} else if (select == 2) {
+				int open = 0; // 비공개 선택 시 open = 0 으로 저장
+				boolean diaryResult = dr.diarySave(memberId, diaryTitle, open, diary);
+				if (diaryResult) {
+					System.out.println("다이어리 작성 완료");
+				} else {
+					System.out.println("다이어리 작성 실패");
+				}
+				System.out.println("회원만 열람할 수 있습니다.");
+
 			} else {
-				System.out.println("다이어리 작성 실패");
+				System.out.println("공개/비공개 여부가 선택 되지 않았습니다. 다이어리가 작성되지 않습니다.");
 			}
 		} else {
 			System.out.println("아이디 또는 비밀번호가 틀립니다. 다시 입력 하세요!!");
 		}
 	}
 
-	public void diaryFindAll() {
-		List<DiaryDTO> diaryList = dr.diaryFindAll();
+	public void diaryFindByOpen() {
+		List<DiaryDTO> diaryList = dr.openDiaryFindByAll();
 		for (DiaryDTO d : diaryList) {
 			System.out.println(d);
 		}
 	}
 
-	public void diaryFindByCondition() {
-		diaryFindAll();
+	// 공개된 다이어리 목록 중 에서 해당 조건으로 조회
+	public void OpenDiaryFindByCondition() {
+		diaryFindByOpen();
 		boolean run = true;
 		while (run) {
-			System.out.println("--------------------------------------------------------------------");
-			System.out.println("1. 아이디로 조회 | 2. 작성 일로 조회 | 3.제목 조회 | 4. 글 번호 조회 | 5. 종료 ");
-			System.out.println("--------------------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------------");
+			System.out.println("1. 아이디로 조회 | 2. 작성 일로 조회 | 3.제목으로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("---------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
 			if (select == 1) {
 				System.out.print("조회할 아이디: ");
 				String memberId = scan.next();
-				List<DiaryDTO> diaryMemberIdList = dr.diaryFindByMemberId(memberId);
-				for (DiaryDTO d : diaryMemberIdList) {
+				List<DiaryDTO> diaryMemberIdList = dr.OpenDiaryFindByMemberId(memberId);
+				if(diaryMemberIdList.size() == 1) {
+					diaryMemberIdList.get(0).setDiaryHits(diaryMemberIdList.get(0).getDiaryHits()+1);
+				}
+				else if (diaryMemberIdList.size() == 0) {
+					System.out.println("조회 결과가 없습니다.");
+				}
+				for(DiaryDTO d : diaryMemberIdList) {
 					System.out.println(d);
 				}
 			} else if (select == 2) {
 				System.out.print("조회할 날짜: ");
 				String diaryDate = scan.next();
-				List<DiaryDTO> diaryDateList = dr.diaryFindByDate(diaryDate);
+				List<DiaryDTO> diaryDateList = dr.OpenDiaryFindByDate(diaryDate);
+				if(diaryDateList.size() == 1) {
+					diaryDateList.get(0).setDiaryHits(diaryDateList.get(0).getDiaryHits()+1);
+				}
+				else if (diaryDateList.size() == 0) {
+					System.out.println("조회 결과가 없습니다.");
+				}
 				for (DiaryDTO d : diaryDateList) {
 					System.out.println(d);
 				}
+
 			} else if (select == 3) {
 				System.out.print("조회할 제목: ");
 				String diaryTitle = scan.next();
-				List<DiaryDTO> diaryTitleList = dr.diaryFindByTitle(diaryTitle);
-				for (DiaryDTO d : diaryTitleList) {
+				List<DiaryDTO> diaryTitleList = dr.OpenDiaryFindByTitle(diaryTitle);
+				if(diaryTitleList.size() == 1) {
+					diaryTitleList.get(0).setDiaryHits(diaryTitleList.get(0).getDiaryHits()+1);
+				}
+				else if (diaryTitleList.size() == 0) {
+					System.out.println("조회 결과가 없습니다.");
+				}
+				for (DiaryDTO d : diaryTitleList) { 
 					System.out.println(d);
 				}
 			} else if (select == 4) {
 				System.out.print("조회할 다이어리 번호: ");
 				Long diaryId = scan.nextLong();
-				List<DiaryDTO> diaryTitleList = dr.diaryFindByDiaryId(diaryId);
-				for (DiaryDTO d : diaryTitleList) {
+				List<DiaryDTO> diaryIdList = dr.OpenDiaryFindByDiaryId(diaryId);
+				for (DiaryDTO d : diaryIdList) {
 					System.out.println(d);
 				}
+				if (diaryIdList.size() == 0) {
+					System.out.println("조회 결과가 없습니다.");
+				}
+			} else if (select == 5) {
+				run = false;
+			}
+		}
+	}
+
+	public void diaryFindBymemberId() {
+		memberFindAll();
+		System.out.print("아이디: ");
+		String memberId = scan.next();
+		System.out.print("비밀번호: ");
+		String memberPass = scan.next();
+		boolean login = dr.memberLogin(memberId, memberPass);
+		if (login) {
+			List<DiaryDTO> diaryList = dr.diaryFindByMemberId(memberId);
+			for (DiaryDTO d : diaryList) {
+				System.out.println(d);
 			}
 		}
 
@@ -221,49 +281,24 @@ public class DiaryService {
 			for (DiaryDTO d : diaryFindByMemberId) {
 				System.out.println(d);
 			}
-			System.out.println("-------------------------");
-			System.out.println("1. 제목 수정 | 2. 내용 수정");
-			System.out.println("-------------------------");
-			System.out.print("선택>");
-			int select = scan.nextInt();
-			if (select == 1) {
-				System.out.print("변경할 다이어리 번호: ");
-				Long diaryId = scan.nextLong();
-				DiaryDTO FindBydiaryId = dr.findByDiaryId(diaryId);
-				if (FindBydiaryId != null) {
-					System.out.print("변경할 다이어리 제목: ");
-					String diaryTitle = scan.next();
-					DiaryDTO diaryTitleUpdate = dr.diaryTitleUpdate(diaryId, diaryTitle);
-					if (diaryTitleUpdate != null) {
-						System.out.println(diaryTitleUpdate);
-					} else {
-						System.out.println("변경될 내용이 없습니다.");
-					}
+			System.out.print("변경할 다이어리 번호: ");
+			Long diaryId = scan.nextLong();
+			boolean checkDiaryId = dr.checkDiaryId(diaryId);
+			if (checkDiaryId) {
+				System.out.print("변경할 다이어리 제목: ");
+				String diaryTitle = scan.next();
+				System.out.print("변경할 다이어리 내용: ");
+				String diary = scan.next();
+				DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, diaryTitle, diary);
+				if (diaryUpdate != null) {
+					System.out.println(diaryUpdate);
 				} else {
-					System.out.println("해당 다이어리 번호가 없습니다.");
-				}
-
-			} else if (select == 2) {
-				System.out.print("변경할 다이어리 번호: ");
-				Long diaryId = scan.nextLong();
-				DiaryDTO FindBydiaryId = dr.findByDiaryId(diaryId);
-				if (FindBydiaryId != null) {
-					System.out.print("변경할 다이어리 내용: ");
-					String diary = scan.next();
-					DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, diary);
-					if (diaryUpdate != null) {
-						System.out.println(diaryUpdate);
-					} else {
-						System.out.println("변경될 내용이 없습니다.");
-					}
-				} else {
-					System.out.println("해당 다이어리 번호가 없습니다.");
+					System.out.println("변경될 내용이 없습니다.");
 				}
 			} else {
-				System.out.println("아이디 또는 비밀번호가 틀립니다. 다시 입력 하세요!!");
+				System.out.println("해당 다이어리 번호가 없습니다.");
 			}
-		}
-		else {
+		} else {
 			System.out.println("아이디 또는 비밀번호가 틀립니다. 다시 입력하세요!!");
 		}
 	}
@@ -294,4 +329,168 @@ public class DiaryService {
 		}
 	}
 
+	public void postSave() {
+		memberFindAll();
+		System.out.print("아이디: ");
+		String memberId = scan.next();
+		System.out.print("비밀번호: ");
+		String memberPass = scan.next();
+		boolean login = dr.memberLogin(memberId, memberPass);
+		if (login) {
+			System.out.print("게시글 제목: ");
+			String postTitle = scan.next();
+			scan.nextLine();
+			System.out.print("게시글 내용: ");
+			String postContents = scan.nextLine();
+			boolean postList = dr.postSave(memberId, postTitle, postContents);
+			if (postList) {
+				System.out.println("게시판 글 등록 완료.");
+			} else {
+				System.out.println("게시판 글 등록 실패");
+			}
+		} else {
+			System.out.println("아이디 또는 비밀번호가 틀립니다!!");
+		}
+	}
+
+	public void postFindByAll() {
+		List<PostDTO> postList = dr.postFindAll();
+		for (PostDTO p : postList) {
+			System.out.println(p);
+		}
+	}
+
+	public void postFindByCondition() {
+		postFindByAll();
+		boolean run = true;
+		while (run) {
+			System.out.println("-----------------------------------------------------------------------");
+			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 날짜로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("-----------------------------------------------------------------------");
+			System.out.print("선택>");
+			int select = scan.nextInt();
+			if (select == 1) {
+				System.out.print("아이디: ");
+				String memberId = scan.next();
+				boolean postCheckMemberId = dr.checkMemberId(memberId);
+				if (postCheckMemberId) {
+					List<PostDTO> postList = dr.postFindByMemberId(memberId);
+					if(postList.size() == 1) {
+						postList.get(0).setPostHits(postList.get(0).getPostHits()+1);
+					}
+					else if(postList.size() == 0) {
+						System.out.println("해당 아이디가 작성한 게시글이 없습니다.");
+					}
+					for (PostDTO p : postList) {
+						System.out.println(p);
+					}
+				}
+				else {
+					System.out.println("해당 아이디가 없습니다.");
+				}
+			} else if (select == 2) {
+				System.out.print("글 제목: ");
+				String postTitle = scan.next();
+				List<PostDTO> postList = dr.postFindByPostTitle(postTitle);
+				if(postList.size() == 1) {
+					postList.get(0).setPostHits(postList.get(0).getPostHits()+1);
+				}
+				else if(postList.size() == 0) {
+					System.out.println("해당 제목인 게시글이 없습니다.");
+				}
+				for (PostDTO p : postList) {
+					System.out.println(p);
+				}
+				
+			} else if (select == 3) {
+				System.out.print("날짜 : ");
+				String postDate = scan.next();
+				List<PostDTO> postList = dr.postFindByPostDate(postDate);
+				if(postList.size() == 1) {
+					postList.get(0).setPostHits(postList.get(0).getPostHits()+1);
+				}
+				else if(postList.size() == 0) {
+					System.out.println("해당 날짜에 작성한 게시글이 없습니다.");
+				}
+				for (PostDTO p : postList) {
+					System.out.println(p);
+				}
+			} else if (select == 4) {
+				System.out.print("글 번호: ");
+				Long postId = scan.nextLong();
+				if(dr.checkPostId(postId)) {
+					List<PostDTO> postList = dr.postFindByPostId(postId);
+					for (PostDTO p : postList) {
+						System.out.println(p);
+					}
+				}
+				else {
+					System.out.println("해당 글번호의 게시글이 없습니다.");
+				}
+			} else if (select == 5) {
+				run = false;
+			}
+		}
+	}
+
+	public void postUpdate() {
+		memberFindAll();
+		System.out.print("아이디: ");
+		String memberId = scan.next();
+		System.out.print("비밀번호:");
+		String memberPass = scan.next();
+		boolean login = dr.memberLogin(memberId, memberPass);
+		if (login) {
+			System.out.println("<작성한 게시글 목록>");
+			List<PostDTO> postList = dr.postFindByMemberId(memberId);
+			for (PostDTO p : postList) {
+				System.out.println(p);
+			}
+			System.out.print("변경할 글 번호: ");
+			Long postId = scan.nextLong();
+			boolean checkPostId = dr.checkPostId(postId);
+			if (checkPostId) {
+				System.out.print("변경할 글 제목: ");
+				String postTitle = scan.next();
+				scan.nextLine();
+				System.out.print("변경할 글 내용: ");
+				String postContents = scan.nextLine();
+				PostDTO postUpdate = dr.postUpdate(postId, postTitle, postContents);
+				System.out.println(postUpdate);
+			} else {
+				System.out.println("해당 글 번호의 게시글이 없습니다.");
+			}
+		}
+		else {
+			System.out.println("아이디 또는 비밀번호가 틀립니다!!");
+		}
+	}
+
+	public void postDelete() {
+		memberFindAll();
+		System.out.print("아이디: ");
+		String memberId = scan.next();
+		System.out.print("비밀번호: ");
+		String memberPass = scan.next();
+		boolean login = dr.memberLogin(memberId, memberPass);
+		if (login) {
+			System.out.println("<작성한 게시글 목록>");
+			List<PostDTO> postFindByMemberId = dr.postFindByMemberId(memberId);
+			for (PostDTO d : postFindByMemberId) {
+				System.out.println(d);
+			}
+			System.out.print("삭제할 글 번호: ");
+			Long postId = scan.nextLong();
+			boolean postDelete = dr.postDelete(postId);
+			if(postDelete) {
+				System.out.println("게시글이 삭제되었습니다.");
+			}
+			else {
+				System.out.println("해당 글 번호의 게시글이 없습니다.");
+			}
+		}
+		else {
+			System.out.println("아이디 또는 비밀번호가 틀립니다!!");
+		}
+	}
 }

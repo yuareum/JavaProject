@@ -8,9 +8,12 @@ import java.util.*;
 public class DiaryRepository {
 	static List<MemberDTO> memberList = new ArrayList<>();
 	static List<DiaryDTO> diaryList = new ArrayList<>();
+	static List<PostDTO> postList = new ArrayList<>();
 	
 	static Long diaryId = 0L;
 	static int diaryHits = 0;
+	static Long postId = 0L;
+	static int postHits = 0;
 	Scanner scan = new Scanner(System.in);
 
 	public boolean checkMemberId(String memberId) {
@@ -95,16 +98,13 @@ public class DiaryRepository {
 			}
 		}
 	}
-
-	public boolean diarySave(DiaryDTO newDiary) {
-		return diaryList.add(newDiary);
-	}
-
-	public boolean diarySave(String memberId,String diaryTitle, String diary) {
+	
+	//다이어리 
+	public boolean diarySave(String memberId,String diaryTitle, int open, String diary) {
 		boolean diaryResult = false;
 		for (int i = 0; i < memberList.size(); i++) {
 			if (memberId.equals(memberList.get(i).getMemberId())) {
-				DiaryDTO newDiary = new DiaryDTO(++diaryId, memberId, diaryDate(),diaryTitle, diary, diaryCreatedTime(), diaryHits);
+				DiaryDTO newDiary = new DiaryDTO(++diaryId, memberId, createdDate(),diaryTitle, diary, createdTime(),open,diaryHits);
 				diaryList.add(newDiary);
 				diaryResult = true;
 			}
@@ -113,102 +113,97 @@ public class DiaryRepository {
 
 	}
 
-	private String diaryCreatedTime() {
+	private String createdTime() {
 		LocalDateTime dateTime = LocalDateTime.now();
-		String diaryCreatedTime = dateTime.format(DateTimeFormatter.ofPattern("yyyy년MM월dd일 HH:mm:ss"));
-		return diaryCreatedTime;
+		String createdTime = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		return createdTime;
 	}
 
-	private String diaryDate() {
+	private String createdDate() {
 		LocalDate dateTime = LocalDate.now();
-		String diaryDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy년MM월dd일"));
-		return diaryDate;
+		String createdDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy년MM월dd일"));
+		return createdDate;
 	}
-
-	public List<DiaryDTO> diaryFindAll() {
-		return diaryList;
-	}
-
-	public List<DiaryDTO> diaryFindByMemberId(String memberId) {
+	
+	//공개된 다이어리 전체 목록 
+	public List<DiaryDTO> openDiaryFindByAll() {
 		List<DiaryDTO> list = new ArrayList<>();
 		for (int i = 0; i < diaryList.size(); i++) {
-			if (memberId.equals(diaryList.get(i).getMemberId())) {
+			if (diaryList.get(i).getOpen() == 1) {
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+	//공개된 다이어리 상세 조회 
+	public List<DiaryDTO> OpenDiaryFindByMemberId(String memberId) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (memberId.equals(diaryList.get(i).getMemberId()) && diaryList.get(i).getOpen() == 1) {
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+	public List<DiaryDTO> OpenDiaryFindByDate(String diaryDate) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryDate.equals(diaryList.get(i).getDiaryDate()) && diaryList.get(i).getOpen() == 1) {
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+	public List<DiaryDTO> OpenDiaryFindByTitle(String diaryTitle) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryTitle.equals(diaryList.get(i).getDiaryTitle()) && diaryList.get(i).getOpen() == 1) {
+				list.add(diaryList.get(i));
+			}
+		}
+		return list;
+	}
+	//글 번호는 중복 없음
+	public List<DiaryDTO> OpenDiaryFindByDiaryId(Long diaryId2) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (diaryId2.equals(diaryList.get(i).getId()) && diaryList.get(i).getOpen() == 1) {
 				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
 				list.add(diaryList.get(i));
 			}
 		}
 		return list;
 	}
-
-	public List<DiaryDTO> diaryFindByDate(String diaryDate) {
-		List<DiaryDTO> list = new ArrayList<>();
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryDate.equals(diaryList.get(i).getDiaryDate())) {
-				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
-				list.add(diaryList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public List<DiaryDTO> diaryFindByTitle(String diaryTitle) {
-		List<DiaryDTO> list = new ArrayList<>();
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryTitle.equals(diaryList.get(i).getDiaryTitle())) {
-				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
-				list.add(diaryList.get(i));
-			}
-		}
-		return list;
-	}
-	public List<DiaryDTO> diaryFindByDiaryId(Long diaryId2) {
-		List<DiaryDTO> list = new ArrayList<>();
+	
+	public boolean checkDiaryId(Long diaryId2) {
+		boolean diary = false;
 		for (int i = 0; i < diaryList.size(); i++) {
 			if (diaryId2.equals(diaryList.get(i).getId())) {
-				diaryList.get(i).setDiaryHits(diaryList.get(i).getDiaryHits() + 1);
-				list.add(diaryList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public DiaryDTO diaryFindById(Long diaryId2) {
-		DiaryDTO diary = null;
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryId2.equals(diaryList.get(i).getId())) {
-				diary = diaryList.get(i);
+				diary = true;
 			}
 		}
 		return diary;
 	}
-	public DiaryDTO findByDiaryId(Long diaryId2) {
-		DiaryDTO findByDiaryId = null;
-		for(int i=0; i < diaryList.size();i++) {
-			if(diaryId2.equals(diaryList.get(i).getId())){
-				return diaryList.get(i);
+	
+	// 작성한 다이어리 목록
+	public List<DiaryDTO> diaryFindByMemberId(String memberId) {
+		List<DiaryDTO> list = new ArrayList<>();
+		for (int i = 0; i < diaryList.size(); i++) {
+			if (memberId.equals(diaryList.get(i).getMemberId())) {
+				list.add(diaryList.get(i));
 			}
 		}
-		return findByDiaryId;
+		return list;
 	}
-
-	public DiaryDTO diaryTitleUpdate(Long diaryId2, String diaryTitle) {
+	
+	
+	public DiaryDTO diaryUpdate(Long diaryId2, String diaryTitle, String diary) {
 		DiaryDTO diaryUpdate = null;
 		for (int i = 0; i < diaryList.size(); i++) {
 			if (diaryId2.equals(diaryList.get(i).getId())) {
 				diaryList.get(i).setDiaryTitle(diaryTitle);
-				diaryUpdate = diaryList.get(i);
-			}
-		}
-		return diaryUpdate;
-	}
-	
-	public DiaryDTO diaryUpdate(Long diaryId2, String diary) {
-		DiaryDTO diaryUpdate = null;
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryId2.equals(diaryList.get(i).getId())) {
 				diaryList.get(i).setDiary(diary);
 				diaryUpdate = diaryList.get(i);
-				
 			}
 		}
 		return diaryUpdate;
@@ -225,6 +220,94 @@ public class DiaryRepository {
 		return deleteResult;
 	}
 
+	public boolean postSave(String memberId, String postTitle, String postContents) {
+		boolean postResult = false;
+		for(int i = 0; i < memberList.size();i++) {
+			if(memberId.equals(memberList.get(i).getMemberId())) {
+				PostDTO newPost = new PostDTO(++postId,memberId,postTitle,postContents,createdDate(),postHits,createdTime());
+				postList.add(newPost);
+				postResult = true;
+			}
+		}
+		return postResult;
+	}
 
+	public List<PostDTO> postFindAll() {
+		return postList;
+	}
+
+	public List<PostDTO> postFindByMemberId(String memberId) {
+		List<PostDTO> list = new ArrayList<>();
+		for (int i = 0; i < postList.size(); i++) {
+			if (memberId.equals(postList.get(i).getMemberId())) {
+				list.add(postList.get(i));
+			}
+		}
+		return list;
+	}
+	public List<PostDTO> postFindByPostTitle(String postTitle) {
+		List<PostDTO> list = new ArrayList<>();
+		for (int i = 0; i < postList.size(); i++) {
+			if (postTitle.equals(postList.get(i).getPostTitle())) {
+				list.add(postList.get(i));
+			}
+		}
+		return list;
+	}
+
+	public List<PostDTO> postFindByPostDate(String postDate) {
+		List<PostDTO> list = new ArrayList<>();
+		for (int i = 0; i < postList.size(); i++) {
+			if (postDate.equals(postList.get(i).getPostCreatedDate())) {
+				list.add(postList.get(i));
+			}
+		}
+		return list;
+	}
+	
+	public List<PostDTO> postFindByPostId(Long postId2) {
+		List<PostDTO> list = new ArrayList<>();
+		for (int i = 0; i < postList.size(); i++) {
+			if (postId2.equals(postList.get(i).getPostId())) {
+				postList.get(i).setPostHits(postList.get(i).getPostHits()+1);
+				list.add(postList.get(i));
+			}
+		}
+		return list;
+	}
+	
+	public boolean checkPostId(Long postId2) {
+		boolean checkPostId = false;
+		for(int i = 0 ; i < postList.size(); i++) {
+			if(postId2.equals(postList.get(i).getPostId())) {
+				checkPostId = true;
+			}
+		}
+		return checkPostId;
+	}
+
+	public PostDTO postUpdate(Long postId2,String postTitle, String postContents) {
+		PostDTO postUpdate = null;
+		for (int i = 0; i < postList.size(); i++) {
+			if (postId2.equals(postList.get(i).getPostId())) {
+				postList.get(i).setPostTitle(postTitle);
+				postList.get(i).setPostContents(postContents);
+				postUpdate = postList.get(i);
+			}
+		}
+		return postUpdate;
+		
+	}
+
+	public boolean postDelete(Long postId2) {
+		boolean postDelete = false;
+		for(int i = 0; i < postList.size(); i++) {
+			if(postId2.equals(postList.get(i).getPostId())) {
+				postList.remove(i);
+				postDelete = true;
+			}
+		}
+		return postDelete;
+	}
 	
 }
