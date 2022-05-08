@@ -99,7 +99,6 @@ public class DiaryRepository {
 		}
 	}
 	
-	//다이어리 
 	public boolean diarySave(String memberId,String diaryTitle, int open, String diary) {
 		boolean diaryResult = false;
 		for (int i = 0; i < memberList.size(); i++) {
