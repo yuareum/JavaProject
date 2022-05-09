@@ -192,7 +192,7 @@ public class DiaryService {
 		boolean run = true;
 		while (run) {
 			System.out.println("----------------------------------------------------------------------");
-			System.out.println("1. 아이디로 조회 | 2. 작성일로 조회 | 3. 제목으로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 글 번호로 조회 | 4. 종료 ");
 			System.out.println("----------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
@@ -210,20 +210,6 @@ public class DiaryService {
 					System.out.println(d);
 				}
 			} else if (select == 2) {
-				System.out.print("조회할 날짜: ");
-				String diaryDate = scan.next();
-				List<DiaryDTO> diaryDateList = dr.OpenDiaryFindByDate(diaryDate);
-				if(diaryDateList.size() == 1) {
-					diaryDateList.get(0).setDiaryHits(diaryDateList.get(0).getDiaryHits()+1);
-				}
-				else if (diaryDateList.size() == 0) {
-					System.out.println("조회 결과가 없습니다.");
-				}
-				for (DiaryDTO d : diaryDateList) {
-					System.out.println(d);
-				}
-
-			} else if (select == 3) {
 				System.out.print("조회할 제목: ");
 				String diaryTitle = scan.next();
 				List<DiaryDTO> diaryTitleList = dr.OpenDiaryFindByTitle(diaryTitle);
@@ -236,7 +222,7 @@ public class DiaryService {
 				for (DiaryDTO d : diaryTitleList) { 
 					System.out.println(d);
 				}
-			} else if (select == 4) {
+			} else if (select == 3) {
 				System.out.print("조회할 다이어리 번호: ");
 				Long diaryId = scan.nextLong();
 				List<DiaryDTO> diaryIdList = dr.OpenDiaryFindByDiaryId(diaryId);
@@ -246,7 +232,7 @@ public class DiaryService {
 				if (diaryIdList.size() == 0) {
 					System.out.println("조회 결과가 없습니다.");
 				}
-			} else if (select == 5) {
+			} else if (select == 4) {
 				run = false;
 			}
 		}
@@ -361,7 +347,7 @@ public class DiaryService {
 		boolean run = true;
 		while (run) {
 			System.out.println("-----------------------------------------------------------------------");
-			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 작성일로 조회 | 4. 글 번호로 조회 | 5. 종료 ");
+			System.out.println("1. 아이디로 조회 | 2. 제목으로 조회 | 3. 글 번호로 조회 | 4. 종료 ");
 			System.out.println("-----------------------------------------------------------------------");
 			System.out.print("선택>");
 			int select = scan.nextInt();
@@ -399,19 +385,6 @@ public class DiaryService {
 				}
 				
 			} else if (select == 3) {
-				System.out.print("날짜 : ");
-				String postDate = scan.next();
-				List<PostDTO> postList = dr.postFindByPostDate(postDate);
-				if(postList.size() == 1) {
-					postList.get(0).setPostHits(postList.get(0).getPostHits()+1);
-				}
-				else if(postList.size() == 0) {
-					System.out.println("해당 날짜에 작성한 게시글이 없습니다.");
-				}
-				for (PostDTO p : postList) {
-					System.out.println(p);
-				}
-			} else if (select == 4) {
 				System.out.print("글 번호: ");
 				Long postId = scan.nextLong();
 				if(dr.checkPostId(postId)) {
@@ -423,7 +396,7 @@ public class DiaryService {
 				else {
 					System.out.println("해당 글번호의 게시글이 없습니다.");
 				}
-			} else if (select == 5) {
+			} else if (select == 4) {
 				run = false;
 			}
 		}

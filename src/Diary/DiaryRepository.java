@@ -144,15 +144,6 @@ public class DiaryRepository {
 		}
 		return list;
 	}
-	public List<DiaryDTO> OpenDiaryFindByDate(String diaryDate) {
-		List<DiaryDTO> list = new ArrayList<>();
-		for (int i = 0; i < diaryList.size(); i++) {
-			if (diaryDate.equals(diaryList.get(i).getDiaryDate()) && diaryList.get(i).getOpen() == 1) {
-				list.add(diaryList.get(i));
-			}
-		}
-		return list;
-	}
 	public List<DiaryDTO> OpenDiaryFindByTitle(String diaryTitle) {
 		List<DiaryDTO> list = new ArrayList<>();
 		for (int i = 0; i < diaryList.size(); i++) {
@@ -174,8 +165,6 @@ public class DiaryRepository {
 		return list;
 	}
 	
-	
-	// 작성한 다이어리 목록
 	public List<DiaryDTO> diaryFindByMemberId(String memberId) {
 		List<DiaryDTO> list = new ArrayList<>();
 		for (int i = 0; i < diaryList.size(); i++) {
@@ -239,16 +228,6 @@ public class DiaryRepository {
 		List<PostDTO> list = new ArrayList<>();
 		for (int i = 0; i < postList.size(); i++) {
 			if (postTitle.equals(postList.get(i).getPostTitle())) {
-				list.add(postList.get(i));
-			}
-		}
-		return list;
-	}
-
-	public List<PostDTO> postFindByPostDate(String postDate) {
-		List<PostDTO> list = new ArrayList<>();
-		for (int i = 0; i < postList.size(); i++) {
-			if (postDate.equals(postList.get(i).getPostCreatedDate())) {
 				list.add(postList.get(i));
 			}
 		}
