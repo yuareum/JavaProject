@@ -176,12 +176,13 @@ public class DiaryRepository {
 	}
 	
 	
-	public DiaryDTO diaryUpdate(Long diaryId2, String memberId, String diaryTitle, String diary) {
+	public DiaryDTO diaryUpdate(Long diaryId2, String memberId, String diaryTitle, String diary, int open) {
 		DiaryDTO diaryUpdate = null;
 		for (int i = 0; i < diaryList.size(); i++) {
 			if (diaryId2.equals(diaryList.get(i).getId()) && memberId.equals(diaryList.get(i).getMemberId())) {
 				diaryList.get(i).setDiaryTitle(diaryTitle);
 				diaryList.get(i).setDiary(diary);
+				diaryList.get(i).setOpen(open);
 				diaryUpdate = diaryList.get(i);
 			}
 		}

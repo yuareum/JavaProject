@@ -273,11 +273,31 @@ public class DiaryService {
 			String diaryTitle = scan.next();
 			System.out.print("변경할 다이어리 내용: ");
 			String diary = scan.next();
-			DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, memberId, diaryTitle, diary);
-			if (diaryUpdate != null) {
-				System.out.println(diaryUpdate);
-			} else {
-				System.out.println("회원은 해당 번호의 다이어리가 없습니다.");
+			System.out.println("---------------------------");
+			System.out.println("공개(1번) / 비공개(2번) 변경");
+			System.out.println("---------------------------");
+			System.out.print("선택>");
+			int select = scan.nextInt();
+			if(select == 1) {
+				int open = 1;
+				DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, memberId, diaryTitle, diary, open);
+				if (diaryUpdate != null) {
+					System.out.println(diaryUpdate);
+				} else {
+					System.out.println("회원은 해당 번호의 다이어리가 없습니다.");
+				}
+			}
+			else if(select == 2) {
+				int open = 0;
+				DiaryDTO diaryUpdate = dr.diaryUpdate(diaryId, memberId, diaryTitle, diary,open);
+				if (diaryUpdate != null) {
+					System.out.println(diaryUpdate);
+				} else {
+					System.out.println("회원은 해당 번호의 다이어리가 없습니다.");
+				}
+			}
+			else {
+				System.out.println("공개/비공개 여부를 선택하지 않았습니다. 다이어리가 변경되지 않습니다.");
 			}
 		} 
 		else {
